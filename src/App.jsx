@@ -43,7 +43,12 @@ export default function App() {
 
       ]
     }
-  ])
+  ],
+  {
+    basename: '/ecommerce/', 
+  }
+
+)
 
   return (
  <RouterProvider router={routes}></RouterProvider>
