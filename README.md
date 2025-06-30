@@ -1,7 +1,7 @@
 # E-Commerce Application
 
 This is a dynamic and responsive e-commerce web application built with React and Vite. It provides a complete shopping experience, from browsing products and adding them to a cart to user authentication and online payments.  
-[Live demo](https://oyead.github.io/ecommerce/)  
+Live demo : https://oyead.github.io/ecommerce/)  
 
 ## Features
 
