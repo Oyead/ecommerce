@@ -1,15 +1,13 @@
 import axios from 'axios'
 import { useFormik } from 'formik'
 import React, { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
-import { userToken } from './../Context/UserToken';
+import { userToken } from './../Context/UserToken'
+
 export default function Register() {
-
-  let {setLogin} = useContext(userToken)
-
+  let { setLogin } = useContext(userToken)
   let navigate = useNavigate()
-
   let [errMsg, setErrMsg] = useState('')
   let [loading, setLoading] = useState(false)
 
@@ -17,130 +15,115 @@ export default function Register() {
     setLoading(true)
     try {
       let { data } = await axios.post(`https://ecommerce.routemisr.com/api/v1/auth/signup`, values)
-      if(data.message === 'success') {
+      if (data.message === 'success') {
         localStorage.setItem('token', data.token)
         setLogin(data.token)
         navigate('/cart')
       }
-      setErrMsg('') 
+      setErrMsg('')
       setLoading(false)
     } catch (error) {
-      console.error(error.response?.data || error.message); 
-      setErrMsg(error.response?.data?.message || 'Something went wrong'); 
-      setLoading(false);
+      console.error(error.response?.data || error.message)
+      setErrMsg(error.response?.data?.message || 'Something went wrong')
+      setLoading(false)
     }
-    
   }
-
 
   let validationSchema = Yup.object().shape({
-    name: Yup.string().min('2', 'too short').max(5, 'too long').required('this field is required'),
-    email: Yup.string().required('required').email('email not valid'),
-    password: Yup.string().required('required').matches(/^[A-Z][a-z0-9]{2,5}$/),
-    rePassword: Yup.string().oneOf([Yup.ref('password')]).required('required'),
-    phone: Yup.string().required().matches(/(01)[0-25][0-9]{8}$/, 'not valid number')
+    name: Yup.string().min(2, 'Name must be at least 2 characters').max(50, 'Name is too long').required('Name is required'),
+    email: Yup.string().email('Please enter a valid email').required('Email is required'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters').matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Must contain uppercase, lowercase, and a number').required('Password is required'),
+    rePassword: Yup.string().oneOf([Yup.ref('password')], 'Passwords must match').required('Please confirm your password'),
+    phone: Yup.string().matches(/^01[0125][0-9]{8}$/, 'Please enter a valid Egyptian phone number').required('Phone number is required')
   })
 
-  function validation(values) {
-    let errors = {}
-    if (!values.name)
-      errors.name = 'name is required'
-    else if (!/^[A-Z][a-z]{2,5}$/.test(values.name))
-      errors.name = 'name not valid'
-    if (!values.email)
-      errors.email = 'email is required'
-
-    return errors
-  }
-
   let formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      password: '',
-      rePassword: '',
-      phone: ''
-    },
-    validationSchema
-    ,
+    initialValues: { name: '', email: '', password: '', rePassword: '', phone: '' },
+    validationSchema,
     onSubmit: handleRegister
   })
 
-
   return (
-    <div className='container'>
-      <h2 className='text-[1.5rem] font-bold my-3'>Register Now:</h2>
+    <div className="container py-8 sm:py-12">
+      <div className="max-w-lg mx-auto">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i className="fa-solid fa-user-plus text-2xl text-green-color"></i>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">Create Account</h2>
+            <p className="text-gray-500 mt-2 text-sm">Join us and start shopping today</p>
+          </div>
 
-      <form className="max-w-md mx-auto" onSubmit={formik.handleSubmit}>
-        <div className="relative z-0 w-full mb-5 group">
-          <input type="text" onBlur={formik.handleBlur} value={formik.values.name} onChange={formik.handleChange} id="name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-green-500 focus:outline-none focus:ring-0 focus:border-green-600 peer" placeholder=" " />
-          {formik.errors.name && formik.touched.name ? <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-            <span class="font-medium">{formik.errors.name} </span>
-          </div> : ''}
+          {errMsg && (
+            <div className="flex items-center gap-3 p-4 mb-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl">
+              <i className="fa-solid fa-circle-exclamation"></i>
+              <span>{errMsg}</span>
+            </div>
+          )}
 
-          <label htmlFor="name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-green-600 peer-focus:dark:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">First name</label>
+          <form onSubmit={formik.handleSubmit} className="space-y-5">
+            {[
+              { id: 'name', label: 'Full Name', icon: 'fa-user', type: 'text', placeholder: 'e.g. John Doe' },
+              { id: 'email', label: 'Email Address', icon: 'fa-envelope', type: 'email', placeholder: 'e.g. john@example.com' },
+              { id: 'password', label: 'Password', icon: 'fa-lock', type: 'password', placeholder: 'Create a strong password' },
+              { id: 'rePassword', label: 'Confirm Password', icon: 'fa-shield-halved', type: 'password', placeholder: 'Re-enter your password' },
+              { id: 'phone', label: 'Phone Number', icon: 'fa-phone', type: 'tel', placeholder: 'e.g. 01012345678' },
+            ].map(field => (
+              <div key={field.id}>
+                <label htmlFor={field.id} className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <i className={`fa-solid ${field.icon} mr-2 text-green-color`}></i>{field.label}
+                </label>
+                <input
+                  type={field.type}
+                  id={field.id}
+                  name={field.id}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values[field.id]}
+                  className="input-field"
+                  placeholder={field.placeholder}
+                />
+                {formik.touched[field.id] && formik.errors[field.id] && (
+                  <p className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                    <i className="fa-solid fa-circle-info"></i>{formik.errors[field.id]}
+                  </p>
+                )}
+              </div>
+            ))}
+
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <p className="text-xs font-semibold text-gray-600 mb-2">
+                <i className="fa-solid fa-circle-check mr-1 text-green-color"></i>Password Requirements:
+              </p>
+              <ul className="space-y-1">
+                {['At least 6 characters long', 'One uppercase letter (A-Z)', 'One lowercase letter (a-z)', 'One number (0-9)'].map((req, i) => (
+                  <li key={i} className="text-xs text-gray-500 flex items-center gap-2">
+                    <i className="fa-solid fa-check text-[10px] text-green-500"></i>{req}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-green-color hover:bg-green-700 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+            >
+              {loading ? (
+                <><i className="fa-solid fa-spinner animate-spin"></i>Creating Account...</>
+              ) : (
+                <><i className="fa-solid fa-arrow-right-to-bracket"></i>Create Account</>
+              )}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-gray-500 mt-6">
+            Already have an account?{' '}
+            <Link to="/login" className="text-green-color hover:underline font-medium">Sign In</Link>
+          </p>
         </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input onBlur={formik.handleBlur} type="email" value={formik.values.email} onChange={formik.handleChange} id="email" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-green-500 focus:outline-none focus:ring-0 focus:border-green-600 peer" placeholder=" " />
-
-          {formik.errors.email && formik.touched.email ? <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-            <span class="font-medium">{formik.errors.email} </span>
-          </div> : ''}
-
-          {errMsg ? <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-            <span class="font-medium">{errMsg} </span>
-          </div>:''}
-
-          <label htmlFor="email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-green-600 peer-focus:dark:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
-        </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input type="password" onBlur={formik.handleBlur} value={formik.values.password} onChange={formik.handleChange} id="password" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-green-500 focus:outline-none focus:ring-0 focus:border-green-600 peer" placeholder=" " />
-
-
-
-
-          {formik.errors.password && formik.touched.password ? <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-            <span class="font-medium">{formik.errors.password} </span>
-          </div> : ''}
-
-
-
-          <label htmlFor="password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-green-600 peer-focus:dark:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
-        </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input type="password" onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.rePassword} id="rePassword" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-green-500 focus:outline-none focus:ring-0 focus:border-green-600 peer" placeholder=" " />
-
-
-          {formik.errors.rePassword && formik.touched.rePassword ? <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-            <span class="font-medium">{formik.errors.rePassword} </span>
-          </div> : ''}
-
-
-          <label htmlFor="rePassword" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-green-600 peer-focus:dark:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-          peer-focus:scale-75 peer-focus:-translate-y-6">Confirm password</label>
-        </div>
-
-        <div className="relative z-0 w-full mb-5 group">
-          <input type="tel" onChange={formik.handleChange} value={formik.values.phone} id="phone" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-green-500 focus:outline-none focus:ring-0 focus:border-green-600 peer" placeholder=" " />
-
-
-          {formik.errors.phone && formik.touched.phone ? <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-            <span class="font-medium">{formik.errors.phone} </span>
-          </div> : ''}
-
-
-          <label htmlFor="phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-green-600 peer-focus:dark:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone number (123-456-7890)</label>
-        </div>
-
-
-        <button type="submit" className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-
-          {loading?<i className='fa-solid fa-spinner animate-spin text-white'></i>:'Register'}
-        </button>
-      </form>
-
-
-
+      </div>
     </div>
   )
 }
