@@ -1,104 +1,105 @@
-import { useMutation } from '@tanstack/react-query';
-import React from 'react';
-import { paymentOnline } from '../Apis/payment';
-import { useFormik } from 'formik';
-import * as motion from 'motion/react-client';
-import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query'
+import React from 'react'
+import { paymentOnline } from '../apis/payment'
+import { useFormik } from 'formik'
+import * as motion from 'motion/react-client'
+import * as Yup from 'yup'
+import { useNavigate } from 'react-router-dom'
 
 export default function Payment({ cartId }) {
-  let navigate = useNavigate(); 
+  let navigate = useNavigate()
 
   let { mutate, data } = useMutation({
     mutationFn: paymentOnline,
     onSuccess: (data) => {
       if (data?.data?.status === 'success') {
-        window.location.href = 'https://buy.stripe.com/test_3csg0o03hfYh9m8288';
+        window.location.href = 'https://buy.stripe.com/test_3csg0o03hfYh9m8288'
       }
     },
-  });
+  })
 
   function handlePayment(values) {
-    const { details, city, phone } = values;
-    mutate({ cartId, shippingAddress: { details, city, phone } });
+    const { details, city, phone } = values
+    mutate({ cartId, shippingAddress: { details, city, phone } })
   }
 
   let validationSchema = Yup.object().shape({
     details: Yup.string().required('Details are required'),
     city: Yup.string().required('City is required'),
-    phone: Yup.string()
-      .required('Phone number is required')
-      .matches(/(01)[0-25][0-9]{8}$/, 'Not a valid phone number'),
-  });
+    phone: Yup.string().required('Phone number is required').matches(/^01[0125][0-9]{8}$/, 'Not a valid phone number'),
+  })
 
   let formik = useFormik({
-    initialValues: {
-      details: '',
-      city: '',
-      phone: '',
-    },
+    initialValues: { details: '', city: '', phone: '' },
     validationSchema,
-    onSubmit: (values) => {
-      handlePayment(values);
-    },
-  });
+    onSubmit: (values) => handlePayment(values),
+  })
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{
-        duration: 0.8,
-        delay: 0.5,
-        ease: [0, 0.71, 0.2, 1.01],
-      }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
     >
-      <h2 className="my-4 text-2xl font-bold">Payment</h2>
-      <form onSubmit={formik.handleSubmit}>
-        <p>Details</p>
-        <input
-          type="text"
-          value={formik.values.details}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          id="details"
-        />
-        {formik.touched.details && formik.errors.details ? (
-          <div className="text-red-500">{formik.errors.details}</div>
-        ) : null}
+      <h3 className="text-lg font-bold text-gray-800 mb-4">
+        <i className="fa-solid fa-credit-card mr-2 text-green-color"></i>Shipping Details
+      </h3>
+      <form onSubmit={formik.handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Address Details</label>
+          <input
+            type="text"
+            value={formik.values.details}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            id="details"
+            className="input-field"
+            placeholder="Street address, building, etc."
+          />
+          {formik.touched.details && formik.errors.details && (
+            <p className="mt-1 text-xs text-red-600">{formik.errors.details}</p>
+          )}
+        </div>
 
-        <br />
-        <p>Address</p>
-        <input
-          type="text"
-          value={formik.values.city}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          id="city"
-        />
-        {formik.touched.city && formik.errors.city ? (
-          <div className="text-red-500">{formik.errors.city}</div>
-        ) : null}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+          <input
+            type="text"
+            value={formik.values.city}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            id="city"
+            className="input-field"
+            placeholder="e.g. Cairo"
+          />
+          {formik.touched.city && formik.errors.city && (
+            <p className="mt-1 text-xs text-red-600">{formik.errors.city}</p>
+          )}
+        </div>
 
-        <br />
-        <p>Phone</p>
-        <input
-          type="text"
-          value={formik.values.phone}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          id="phone"
-        />
-        {formik.touched.phone && formik.errors.phone ? (
-          <div className="text-red-500">{formik.errors.phone}</div>
-        ) : null}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+          <input
+            type="text"
+            value={formik.values.phone}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            id="phone"
+            className="input-field"
+            placeholder="e.g. 01012345678"
+          />
+          {formik.touched.phone && formik.errors.phone && (
+            <p className="mt-1 text-xs text-red-600">{formik.errors.phone}</p>
+          )}
+        </div>
 
-        <br />
-        <br />
-        <button type="submit" className="p-4 bg-green-500">
-          Submit
+        <button
+          type="submit"
+          className="w-full bg-green-color hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+        >
+          <i className="fa-solid fa-lock"></i>Pay Securely
         </button>
       </form>
     </motion.div>
-  );
+  )
 }
