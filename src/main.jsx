@@ -10,7 +10,7 @@ import UserTokenProvider from './Context/UserToken.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
-import NumItemContextProvider from './Context/NumCartContext.jsx';
+import NumItemContextProvider from './Context/NumcartContext.jsx';
 
 const queryClient = new QueryClient()
  

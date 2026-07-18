@@ -6,7 +6,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Categories from './components/Categories';
 const Brand = lazy(() => import('././components/Brand'));
-import Notfound from './components/Notfound';
+import Notfound from './components/NotFound';
 import Products from './components/Products';
 import Cart from './components/Cart';
 import ProtecetdRoute from './components/ProtecetdRoute';
