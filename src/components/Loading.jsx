@@ -1,19 +1,12 @@
 import React from 'react'
-import { Grid } from 'react-loader-spinner'
 
 export default function Loading() {
   return (
-   <div className='bg-white  absolute top-0 bottom-0 right-0 left-0 flex items-center justify-center'>
-     <Grid
-      visible={true}
-      height="80"
-      width="80"
-      color="#4fa94d"
-      ariaLabel="grid-loading"
-      radius="12.5"
-      wrapperStyle={{}}
-      wrapperClass="grid-wrapper"
-    />
-   </div>
+    <div className="flex items-center justify-center py-20">
+      <div className="relative">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-4 border-gray-200"></div>
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-4 border-green-color border-t-transparent animate-spin absolute top-0 left-0"></div>
+      </div>
+    </div>
   )
 }
