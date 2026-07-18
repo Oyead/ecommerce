@@ -8,34 +8,54 @@ export default {
   theme: {
     screens: {
       'sm': '640px',
-      // => @media (min-width: 640px) { ... }
-
       'md': '768px',
-      // => @media (min-width: 768px) { ... }
-
       'lg': '1024px',
-      // => @media (min-width: 1024px) { ... }
-
       'xl': '1280px',
-      // => @media (min-width: 1280px) { ... }
-
       '2xl': '1560px',
-      // => @media (min-width: 1536px) { ... }
     },
     container: {
       center: true,
-      padding: '2rem',
+      padding: {
+        DEFAULT: '1rem',
+        sm: '1.5rem',
+        lg: '2rem',
+      },
     },
     colors: {
-      'green-color':'#0aad0a',
-      'light-color':'f0f3f2',
-      'rating-color':'#ffc908',
+      'green-color': '#0aad0a',
+      'green-light': '#e6f5e6',
+      'light-color': '#f0f3f2',
+      'rating-color': '#ffc908',
+      'gray-50': '#f9fafb',
+      'gray-100': '#f3f4f6',
+      'gray-200': '#e5e7eb',
+      'gray-300': '#d1d5db',
+      'gray-400': '#9ca3af',
+      'gray-500': '#6b7280',
+      'gray-600': '#4b5563',
+      'gray-700': '#374151',
+      'gray-800': '#1f2937',
+      'gray-900': '#111827',
+      'white': '#ffffff',
+      'black': '#000000',
+      'red-50': '#fef2f2',
+      'red-400': '#f87171',
+      'red-500': '#ef4444',
+      'red-600': '#dc2626',
+      'red-700': '#b91c1c',
+      'red-800': '#991b1b',
+      'green-50': '#f0fdf4',
+      'green-100': '#dcfce7',
+      'green-300': '#86efac',
+      'green-400': '#4ade80',
+      'green-500': '#22c55e',
+      'green-600': '#16a34a',
+      'green-700': '#15803d',
+      'yellow-400': '#facc15',
     },
     extend: {},
   },
   plugins: [
     require('flowbite/plugin')
   ],
-  darkMode:'class'
 }
-
