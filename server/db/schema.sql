@@ -21,6 +21,9 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- A phone number may be registered by only one account.
+CREATE UNIQUE INDEX IF NOT EXISTS users_phone_key ON users(phone);
+
 -- ---------------------------------------------------------------------------
 -- Addresses (user saved shipping addresses)
 -- ---------------------------------------------------------------------------
