@@ -1,42 +1,23 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
 import React from 'react'
-
-
-let token = localStorage.getItem('token')
+import { api } from '../apis/client'
 
 //add to cart
 export function addToCart(productId) {
-    return axios.post(`https://ecommerce.routemisr.com/api/v1/cart`, { productId }, {
-        headers: {
-            token
-        }
-    })
+    return api.post(`/cart`, { productId })
 }
 
 //delete item from cart
 export function deleteItem(productId) {
-    return axios.delete(`https://ecommerce.routemisr.com/api/v1/cart/${productId}`, {
-        headers: {
-            token
-        }
-    })
+    return api.delete(`/cart/${productId}`)
 }
 //clear item from cart
 export function clearCart() {
-    return axios.delete(`https://ecommerce.routemisr.com/api/v1/cart/`, {
-        headers: {
-            token
-        }
-    })
+    return api.delete(`/cart/`)
 }
 //update 
 export function updateCount({ productId, count }) {
-    return axios.put(`https://ecommerce.routemisr.com/api/v1/cart/${productId}`, { count }, {
-        headers: {
-            token
-        }
-    })
+    return api.put(`/cart/${productId}`, { count })
 }
 
 export default function useMutationCart(fn) {

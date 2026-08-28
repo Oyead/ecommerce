@@ -1,16 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import React from 'react'
-
-
-let token = localStorage.getItem('token')
+import { api } from '../apis/client'
 
 export function getWishlist() {
-    return axios.get(`https://ecommerce.routemisr.com/api/v1/wishlist`, {
-        headers: {
-            token
-        }
-    })
+    return api.get(`/wishlist`)
 }
 
 export default function useQueryWishlist(fn) {
@@ -23,9 +16,5 @@ export default function useQueryWishlist(fn) {
 
 }
 export function addToCart(productId) {
-  return axios.post(`https://ecommerce.routemisr.com/api/v1/cart`, { productId }, {
-      headers: {
-          token
-      }
-  })
+  return api.post(`/cart`, { productId })
 }

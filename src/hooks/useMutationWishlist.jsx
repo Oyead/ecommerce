@@ -1,25 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-
-let token = localStorage.getItem('token')
+import { api } from '../apis/client'
 
 export function AddtoWishlist(productId){
-  return axios.post(`https://ecommerce.routemisr.com/api/v1/wishlist`,{productId},
-    {
-      headers:{
-        token
-      }
-    }
-  )
+  return api.post(`/wishlist`, { productId })
 }
 
 export function RemoveItem(productId){
-  return axios.delete(`https://ecommerce.routemisr.com/api/v1/wishlist/${productId}`,{
-      headers:{
-        token
-      }
-    }
-  )
+  return api.delete(`/wishlist/${productId}`)
 }
 
 export default function useMutationWis(fn) {

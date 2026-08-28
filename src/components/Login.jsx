@@ -1,9 +1,9 @@
-import axios from 'axios'
 import { useFormik } from 'formik'
 import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 import { userToken } from '../Context/UserToken'
+import { api } from '../apis/client'
 
 export default function Login() {
   let { setLogin } = useContext(userToken)
@@ -14,7 +14,7 @@ export default function Login() {
   async function handlelogin(values) {
     setLoading(true)
     try {
-      let { data } = await axios.post(`https://ecommerce.routemisr.com/api/v1/auth/signin`, values)
+      let { data } = await api.post(`/auth/signin`, values)
       if (data.message === 'success') {
         setLogin(data.token)
         localStorage.setItem('token', data.token)
