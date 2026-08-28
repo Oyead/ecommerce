@@ -45,7 +45,7 @@ export default function App() {
     }
   ],
   {
-    basename: '/ecommerce/', 
+    basename: '/', 
   }
 
 )
