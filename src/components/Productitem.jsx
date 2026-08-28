@@ -30,7 +30,7 @@ export default function ProductItem({ prod }) {
 
   return (
     <div className="product bg-white rounded-2xl border border-gray-100 overflow-hidden w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 p-3">
-      <Link to={`/productdetails}/${id}/${category._id}`} className="block">
+      <Link to={`/productdetails/${id}/${category._id}`} className="block">
         <div className="relative overflow-hidden rounded-xl mb-3">
           <img src={imageCover} className="w-full h-40 sm:h-48 object-cover transition-transform duration-500 hover:scale-105" alt={title} />
           {priceAfterDiscount && (
