@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 
 export default function ProductItem({ prod }) {
   const [isLiked, setIsLiked] = useState(false);
-  let { imageCover, id, title, price, category, ratingsAverage, priceAfterDiscount } = prod;
+  let { imageCover, _id: id, title, price, category, ratingsAverage, priceAfterDiscount } = prod;
 
   let { data: cartData, mutate: mutateCart, error: cartError, isError: isCartError, isSuccess: isCartSuccess } = useMutationCart(addToCart);
   let { mutate: mutateWishlist } = useMutationWishlist(isLiked ? RemoveItem : AddtoWishlist);
